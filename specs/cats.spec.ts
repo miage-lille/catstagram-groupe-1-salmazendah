@@ -3,6 +3,7 @@ import { getCmd, getModel, ActionCmd, RunCmd } from 'redux-loop';
 import reducer, { counterSelector, getSelectedPicture, picturesSelector } from '../src/reducer';
 import { fetchCatsCommit, fetchCatsRollback } from '../src/actions';
 import 'fp-ts-jest-matchers';
+import fakeData from '../src/fake-datas.json';
 import {
   getStateWithCounterEquals3,
   getState,
@@ -110,8 +111,8 @@ test('given state and INCREMENT action then FETCH_CATS_REQUEST must be dispatche
       getState().chain(s => fc.tuple(fc.constant(s), getFetchCatsRequestAction(s.counter + 1))),
       ([state, fetchRequestAction]) => {
         const nextState = reducer(state, { type: 'INCREMENT' });
-        const cmd = getCmd(nextState) as ActionCmd<FetchCatsRequest>;
-        expect(cmd.simulate()).toEqual(fetchRequestAction);
+        const cmd = getCmd(nextState) as RunCmd<FetchCatsCommit, FetchCatsRollback>;
+        expect(cmd.simulate({ success: true, result: fakeData })).toEqual(fetchCatsCommit(fakeData));
       },
     ),
   );
@@ -125,8 +126,8 @@ test('given state and DECREMENT action then FETCH_CATS_REQUEST must be dispatche
         .chain(s => fc.tuple(fc.constant(s), getFetchCatsRequestAction(s.counter - 1))),
       ([state, fetchRequestAction]) => {
         const nextState = reducer(state, { type: 'DECREMENT' });
-        const cmd = getCmd(nextState) as ActionCmd<FetchCatsRequest>;
-        expect(cmd.simulate()).toEqual(fetchRequestAction);
+        const cmd = getCmd(nextState) as RunCmd<FetchCatsCommit, FetchCatsRollback>;
+        expect(cmd.simulate({ success: true, result: fakeData })).toEqual(fetchCatsCommit(fakeData));
       },
     ),
   );

@@ -38,6 +38,7 @@ const getState = () =>
     counter: fc.integer(),
     pictures: getPictures(),
     pictureSelected: fc.oneof(getSomeFromPicture(getPictureArb()), getNone()),
+    error: fc.oneof(fc.constant(null), fc.string().map(Error)),
   });
 
 const getStateWithCounterEquals3 = () =>
@@ -45,6 +46,7 @@ const getStateWithCounterEquals3 = () =>
     counter: fc.constant(3),
     pictures: getPictures(),
     pictureSelected: fc.oneof(getSomeFromPicture(getPictureArb()), getNone()),
+    error: fc.oneof(fc.constant(null), fc.string().map(Error)),
   });
 
 export {
